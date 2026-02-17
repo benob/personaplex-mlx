@@ -1,0 +1,178 @@
+# PersonaPlex vs Base Moshiko Weight Diff
+
+- Base repo: `kyutai/moshiko-pytorch-bf16`
+- Target repo: `nvidia/personaplex-7b-v1`
+- Base tensor keys: `355`
+- Target tensor keys: `475`
+- Added keys in target: `120`
+- Removed keys in target: `0`
+- Shape-changed shared keys: `12`
+
+## Added key prefixes
+
+- `depformer.layers`: 96
+- `depformer_emb.10`: 1
+- `depformer_emb.11`: 1
+- `depformer_emb.12`: 1
+- `depformer_emb.13`: 1
+- `depformer_emb.14`: 1
+- `depformer_emb.7`: 1
+- `depformer_emb.8`: 1
+- `depformer_emb.9`: 1
+- `depformer_in.10`: 1
+- `depformer_in.11`: 1
+- `depformer_in.12`: 1
+- `depformer_in.13`: 1
+- `depformer_in.14`: 1
+- `depformer_in.15`: 1
+- `depformer_in.8`: 1
+- `depformer_in.9`: 1
+- `linears.10`: 1
+- `linears.11`: 1
+- `linears.12`: 1
+- `linears.13`: 1
+- `linears.14`: 1
+- `linears.15`: 1
+- `linears.8`: 1
+- `linears.9`: 1
+
+## Shape changes
+
+- `depformer.layers.0.self_attn.in_proj_weight`: `(24576, 1024)` -> `(49152, 1024)`
+- `depformer.layers.0.self_attn.out_proj.weight`: `(8192, 1024)` -> `(16384, 1024)`
+- `depformer.layers.1.self_attn.in_proj_weight`: `(24576, 1024)` -> `(49152, 1024)`
+- `depformer.layers.1.self_attn.out_proj.weight`: `(8192, 1024)` -> `(16384, 1024)`
+- `depformer.layers.2.self_attn.in_proj_weight`: `(24576, 1024)` -> `(49152, 1024)`
+- `depformer.layers.2.self_attn.out_proj.weight`: `(8192, 1024)` -> `(16384, 1024)`
+- `depformer.layers.3.self_attn.in_proj_weight`: `(24576, 1024)` -> `(49152, 1024)`
+- `depformer.layers.3.self_attn.out_proj.weight`: `(8192, 1024)` -> `(16384, 1024)`
+- `depformer.layers.4.self_attn.in_proj_weight`: `(24576, 1024)` -> `(49152, 1024)`
+- `depformer.layers.4.self_attn.out_proj.weight`: `(8192, 1024)` -> `(16384, 1024)`
+- `depformer.layers.5.self_attn.in_proj_weight`: `(24576, 1024)` -> `(49152, 1024)`
+- `depformer.layers.5.self_attn.out_proj.weight`: `(8192, 1024)` -> `(16384, 1024)`
+
+## Added keys (full list)
+
+- `depformer.layers.0.gating.10.linear_in.weight`
+- `depformer.layers.0.gating.10.linear_out.weight`
+- `depformer.layers.0.gating.11.linear_in.weight`
+- `depformer.layers.0.gating.11.linear_out.weight`
+- `depformer.layers.0.gating.12.linear_in.weight`
+- `depformer.layers.0.gating.12.linear_out.weight`
+- `depformer.layers.0.gating.13.linear_in.weight`
+- `depformer.layers.0.gating.13.linear_out.weight`
+- `depformer.layers.0.gating.14.linear_in.weight`
+- `depformer.layers.0.gating.14.linear_out.weight`
+- `depformer.layers.0.gating.15.linear_in.weight`
+- `depformer.layers.0.gating.15.linear_out.weight`
+- `depformer.layers.0.gating.8.linear_in.weight`
+- `depformer.layers.0.gating.8.linear_out.weight`
+- `depformer.layers.0.gating.9.linear_in.weight`
+- `depformer.layers.0.gating.9.linear_out.weight`
+- `depformer.layers.1.gating.10.linear_in.weight`
+- `depformer.layers.1.gating.10.linear_out.weight`
+- `depformer.layers.1.gating.11.linear_in.weight`
+- `depformer.layers.1.gating.11.linear_out.weight`
+- `depformer.layers.1.gating.12.linear_in.weight`
+- `depformer.layers.1.gating.12.linear_out.weight`
+- `depformer.layers.1.gating.13.linear_in.weight`
+- `depformer.layers.1.gating.13.linear_out.weight`
+- `depformer.layers.1.gating.14.linear_in.weight`
+- `depformer.layers.1.gating.14.linear_out.weight`
+- `depformer.layers.1.gating.15.linear_in.weight`
+- `depformer.layers.1.gating.15.linear_out.weight`
+- `depformer.layers.1.gating.8.linear_in.weight`
+- `depformer.layers.1.gating.8.linear_out.weight`
+- `depformer.layers.1.gating.9.linear_in.weight`
+- `depformer.layers.1.gating.9.linear_out.weight`
+- `depformer.layers.2.gating.10.linear_in.weight`
+- `depformer.layers.2.gating.10.linear_out.weight`
+- `depformer.layers.2.gating.11.linear_in.weight`
+- `depformer.layers.2.gating.11.linear_out.weight`
+- `depformer.layers.2.gating.12.linear_in.weight`
+- `depformer.layers.2.gating.12.linear_out.weight`
+- `depformer.layers.2.gating.13.linear_in.weight`
+- `depformer.layers.2.gating.13.linear_out.weight`
+- `depformer.layers.2.gating.14.linear_in.weight`
+- `depformer.layers.2.gating.14.linear_out.weight`
+- `depformer.layers.2.gating.15.linear_in.weight`
+- `depformer.layers.2.gating.15.linear_out.weight`
+- `depformer.layers.2.gating.8.linear_in.weight`
+- `depformer.layers.2.gating.8.linear_out.weight`
+- `depformer.layers.2.gating.9.linear_in.weight`
+- `depformer.layers.2.gating.9.linear_out.weight`
+- `depformer.layers.3.gating.10.linear_in.weight`
+- `depformer.layers.3.gating.10.linear_out.weight`
+- `depformer.layers.3.gating.11.linear_in.weight`
+- `depformer.layers.3.gating.11.linear_out.weight`
+- `depformer.layers.3.gating.12.linear_in.weight`
+- `depformer.layers.3.gating.12.linear_out.weight`
+- `depformer.layers.3.gating.13.linear_in.weight`
+- `depformer.layers.3.gating.13.linear_out.weight`
+- `depformer.layers.3.gating.14.linear_in.weight`
+- `depformer.layers.3.gating.14.linear_out.weight`
+- `depformer.layers.3.gating.15.linear_in.weight`
+- `depformer.layers.3.gating.15.linear_out.weight`
+- `depformer.layers.3.gating.8.linear_in.weight`
+- `depformer.layers.3.gating.8.linear_out.weight`
+- `depformer.layers.3.gating.9.linear_in.weight`
+- `depformer.layers.3.gating.9.linear_out.weight`
+- `depformer.layers.4.gating.10.linear_in.weight`
+- `depformer.layers.4.gating.10.linear_out.weight`
+- `depformer.layers.4.gating.11.linear_in.weight`
+- `depformer.layers.4.gating.11.linear_out.weight`
+- `depformer.layers.4.gating.12.linear_in.weight`
+- `depformer.layers.4.gating.12.linear_out.weight`
+- `depformer.layers.4.gating.13.linear_in.weight`
+- `depformer.layers.4.gating.13.linear_out.weight`
+- `depformer.layers.4.gating.14.linear_in.weight`
+- `depformer.layers.4.gating.14.linear_out.weight`
+- `depformer.layers.4.gating.15.linear_in.weight`
+- `depformer.layers.4.gating.15.linear_out.weight`
+- `depformer.layers.4.gating.8.linear_in.weight`
+- `depformer.layers.4.gating.8.linear_out.weight`
+- `depformer.layers.4.gating.9.linear_in.weight`
+- `depformer.layers.4.gating.9.linear_out.weight`
+- `depformer.layers.5.gating.10.linear_in.weight`
+- `depformer.layers.5.gating.10.linear_out.weight`
+- `depformer.layers.5.gating.11.linear_in.weight`
+- `depformer.layers.5.gating.11.linear_out.weight`
+- `depformer.layers.5.gating.12.linear_in.weight`
+- `depformer.layers.5.gating.12.linear_out.weight`
+- `depformer.layers.5.gating.13.linear_in.weight`
+- `depformer.layers.5.gating.13.linear_out.weight`
+- `depformer.layers.5.gating.14.linear_in.weight`
+- `depformer.layers.5.gating.14.linear_out.weight`
+- `depformer.layers.5.gating.15.linear_in.weight`
+- `depformer.layers.5.gating.15.linear_out.weight`
+- `depformer.layers.5.gating.8.linear_in.weight`
+- `depformer.layers.5.gating.8.linear_out.weight`
+- `depformer.layers.5.gating.9.linear_in.weight`
+- `depformer.layers.5.gating.9.linear_out.weight`
+- `depformer_emb.10.weight`
+- `depformer_emb.11.weight`
+- `depformer_emb.12.weight`
+- `depformer_emb.13.weight`
+- `depformer_emb.14.weight`
+- `depformer_emb.7.weight`
+- `depformer_emb.8.weight`
+- `depformer_emb.9.weight`
+- `depformer_in.10.weight`
+- `depformer_in.11.weight`
+- `depformer_in.12.weight`
+- `depformer_in.13.weight`
+- `depformer_in.14.weight`
+- `depformer_in.15.weight`
+- `depformer_in.8.weight`
+- `depformer_in.9.weight`
+- `linears.10.weight`
+- `linears.11.weight`
+- `linears.12.weight`
+- `linears.13.weight`
+- `linears.14.weight`
+- `linears.15.weight`
+- `linears.8.weight`
+- `linears.9.weight`
+
+## Removed keys (full list)
+
