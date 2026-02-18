@@ -264,6 +264,11 @@ def main():
     parser.add_argument("--text-temp", type=float, default=0.7)
     parser.add_argument("--audio-topk", type=int, default=250)
     parser.add_argument("--text-topk", type=int, default=25)
+    parser.add_argument(
+        "--trace-output",
+        type=str,
+        help="Optional path to write Chrome trace JSON for debugging.",
+    )
     args = parser.parse_args()
 
     client_to_server = multiprocessing.Queue()
@@ -318,40 +323,42 @@ def main():
         p1.terminate()
         p2.terminate()
 
-    chrome_events = []
-    for e in events:
-        name, ph, tid, args_dict = "unk", "X", 1, {}
-        event = e["event"]
-        if event == "s_get":
-            name, ph, tid = "model", "B", 3
-        elif event == "s_put":
-            name, ph, tid = "model", "E", 3
-        elif event == "encode":
-            name, ph, tid = "encode", "B", 1
-        elif event == "encoded":
-            name, ph, tid = "encode", "E", 1
-        elif event == "decode":
-            name, ph, tid = "decode", "B", 2
-        elif event == "decoded":
-            name, ph, tid = "decode", "E", 2
-        elif event == "lag":
-            name, ph, tid = "lag", "i", 2
-        elif event == "qsize":
-            name, ph, tid = "qsize", "C", 4
-            args_dict["qsize"] = e["qsize"]
-        chrome_events.append(
-            {
-                "name": name,
-                "cat": "",
-                "ph": ph,
-                "ts": e["time"] * 1e6,
-                "pid": 1,
-                "tid": tid,
-                "args": args_dict,
-            }
-        )
-    with open("mlx-trace.json", "w", encoding="utf-8") as fobj:
-        json.dump(chrome_events, fobj)
+    if args.trace_output:
+        chrome_events = []
+        for e in events:
+            name, ph, tid, args_dict = "unk", "X", 1, {}
+            event = e["event"]
+            if event == "s_get":
+                name, ph, tid = "model", "B", 3
+            elif event == "s_put":
+                name, ph, tid = "model", "E", 3
+            elif event == "encode":
+                name, ph, tid = "encode", "B", 1
+            elif event == "encoded":
+                name, ph, tid = "encode", "E", 1
+            elif event == "decode":
+                name, ph, tid = "decode", "B", 2
+            elif event == "decoded":
+                name, ph, tid = "decode", "E", 2
+            elif event == "lag":
+                name, ph, tid = "lag", "i", 2
+            elif event == "qsize":
+                name, ph, tid = "qsize", "C", 4
+                args_dict["qsize"] = e["qsize"]
+            chrome_events.append(
+                {
+                    "name": name,
+                    "cat": "",
+                    "ph": ph,
+                    "ts": e["time"] * 1e6,
+                    "pid": 1,
+                    "tid": tid,
+                    "args": args_dict,
+                }
+            )
+        with open(args.trace_output, "w", encoding="utf-8") as fobj:
+            json.dump(chrome_events, fobj)
+        printer.log("info", f"trace written to {args.trace_output}")
 
     p1.join()
     p2.join()

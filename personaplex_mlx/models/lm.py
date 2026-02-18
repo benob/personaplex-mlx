@@ -786,6 +786,71 @@ def config_v0_1() -> LmConfig:
     )
 
 
+def config_personaplex_7b_v1() -> LmConfig:
+    transformer = TransformerConfig(
+        d_model=4096,
+        num_heads=32,
+        num_layers=32,
+        dim_feedforward=int(4.125 * 4096),
+        causal=True,
+        norm_first=True,
+        bias_ff=False,
+        bias_attn=False,
+        layer_scale=None,
+        context=3000,
+        max_period=10000,
+        use_conv_block=False,
+        use_conv_bias=True,
+        cross_attention=False,
+        gating=True,
+        norm="rms_norm",
+        positional_embedding="rope",
+        conv_layout=False,
+        conv_kernel_size=3,
+        kv_repeat=1,
+        max_seq_len=4096,
+    )
+    depformer = DepFormerConfig(
+        transformer=TransformerConfig(
+            d_model=1024,
+            num_heads=16,
+            num_layers=6,
+            dim_feedforward=int(4.125 * 1024),
+            causal=True,
+            norm_first=True,
+            bias_ff=False,
+            bias_attn=False,
+            layer_scale=None,
+            context=8,
+            max_period=10000,
+            use_conv_block=False,
+            use_conv_bias=True,
+            cross_attention=False,
+            gating=True,
+            norm="rms_norm",
+            positional_embedding="none",
+            conv_layout=False,
+            conv_kernel_size=3,
+            kv_repeat=1,
+            max_seq_len=4096,
+        ),
+        num_slices=16,
+        weights_per_step_schedule=None,
+    )
+    return LmConfig(
+        transformer=transformer,
+        depformer=depformer,
+        audio_vocab_size=2049,
+        text_in_vocab_size=32001,
+        text_out_vocab_size=32000,
+        audio_codebooks=16,
+        text_delay=0,
+        audio_delays=[0, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1],
+        conditioners={},
+        audio_tokens_per_stream=8,
+    )
+
+
 def config_helium_1_preview_2b() -> LmConfig:
     transformer = TransformerConfig(
         d_model=2560,

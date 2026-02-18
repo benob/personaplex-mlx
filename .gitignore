@@ -1,0 +1,15 @@
+__pycache__/
+*.py[cod]
+*.so
+
+.DS_Store
+
+.venv/
+.eggs/
+*.egg-info/
+
+.mypy_cache/
+.pytest_cache/
+
+mlx-trace.json
+uv.lock

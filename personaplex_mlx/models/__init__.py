@@ -10,6 +10,7 @@ from .lm import (
     Lm,
     LmConfig,
     config_v0_1,
+    config_personaplex_7b_v1,
     config1b_202412,
     config1b_202412_16rvq,
     config_helium_1_preview_2b,

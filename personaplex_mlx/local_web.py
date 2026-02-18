@@ -123,8 +123,7 @@ class ServerState:
                         continue
                     if payload[0] != 1:
                         continue
-                    opus_reader.append_bytes(payload[1:])
-                    pcm = opus_reader.read_pcm()
+                    pcm = opus_reader.append_bytes(payload[1:])
                     if pcm.shape[-1] == 0:
                         continue
                     if all_pcm_data is None:
@@ -170,18 +169,30 @@ class ServerState:
                     audio_tokenizer.decode(np.array(audio_tokens).astype(np.uint32))
 
         async def send_loop():
+            nonlocal close
             while True:
                 if close:
                     return
                 await asyncio.sleep(0.001)
+                if ws.closed:
+                    close = True
+                    return
                 decoded = audio_tokenizer.get_decoded()
                 if decoded is not None:
                     msg = opus_writer.append_pcm(decoded)
                     if len(msg) > 0:
-                        await ws.send_bytes(b"\x01" + msg)
+                        try:
+                            await ws.send_bytes(b"\x01" + msg)
+                        except aiohttp.ClientConnectionResetError:
+                            close = True
+                            return
                 try:
                     text = text_queue.get(block=False)
-                    await ws.send_bytes(b"\x02" + text.encode("utf-8"))
+                    try:
+                        await ws.send_bytes(b"\x02" + text.encode("utf-8"))
+                    except aiohttp.ClientConnectionResetError:
+                        close = True
+                        return
                 except queue.Empty:
                     pass
 

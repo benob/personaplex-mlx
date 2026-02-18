@@ -116,10 +116,12 @@ class LmGen:
             ) from exc
 
         state = torch.load(path, map_location="cpu")
-        embeddings = state["embeddings"].cpu().numpy()
-        cache = state["cache"].cpu().numpy()
+        embeddings_t = state["embeddings"].to(device="cpu", dtype=torch.float32)
+        cache_t = state["cache"].to(device="cpu")
+        embeddings = embeddings_t.numpy()
+        cache = cache_t.numpy()
         self.voice_prompt = path
-        self.voice_prompt_embeddings = [mx.array(emb) for emb in embeddings]
+        self.voice_prompt_embeddings = [mx.array(emb).astype(mx.bfloat16) for emb in embeddings]
         self.voice_prompt_cache = mx.array(cache, dtype=mx.int32)
 
     def _prepare_step_input(
@@ -279,10 +281,19 @@ class LmGen:
             raise ValueError(
                 f"expected embeddings batch {self.batch_size}, got {embeddings.shape[0]}"
             )
+        # Match PyTorch LMGen.step_embeddings(): replay embeddings while forcing
+        # both audio streams with the model's initial audio token.
+        dummy_audio = mx.full(
+            (self.batch_size, self.model.cfg.audio_codebooks, 1),
+            self.audio_padding_token,
+            dtype=mx.int32,
+        )
+        dummy_input = dummy_audio[:, self.assistant_codebooks :, :]
+        dummy_moshi = dummy_audio[:, : self.assistant_codebooks, :]
         while True:
             prepared = self._prepare_step_input(
-                input_tokens=self._encode_sine_frame(),
-                moshi_tokens=self._encode_zero_frame(),
+                input_tokens=dummy_input,
+                moshi_tokens=dummy_moshi,
                 text_token=self.zero_text_code,
             )
             if prepared is not None:
@@ -304,7 +315,6 @@ class LmGen:
                 self.step_embeddings(emb)
             if self.voice_prompt_cache is not None:
                 self.cache = self.voice_prompt_cache.astype(mx.int32)
-                self.provided = mx.zeros_like(self.provided)
 
         for _ in range(self.audio_silence_frame_cnt):
             self.step(

@@ -9,7 +9,7 @@ import tarfile
 from pathlib import Path
 
 import huggingface_hub
-from huggingface_hub import EntryNotFoundError
+from huggingface_hub.utils import EntryNotFoundError
 import mlx.core as mx
 import mlx.nn as nn
 import numpy as np
@@ -65,6 +65,10 @@ def get_lm_config(config_path: str | None, hf_repo: str) -> models.LmConfig:
 
     with open(config_path, "r", encoding="utf-8") as fobj:
         data = json.load(fobj)
+    if "dim" not in data:
+        if hf_repo == "nvidia/personaplex-7b-v1":
+            return models.config_personaplex_7b_v1()
+        return models.config_v0_1()
     return models.LmConfig.from_config_dict(data)
 
 
