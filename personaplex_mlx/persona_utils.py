@@ -66,7 +66,7 @@ def get_lm_config(config_path: str | None, hf_repo: str) -> models.LmConfig:
     with open(config_path, "r", encoding="utf-8") as fobj:
         data = json.load(fobj)
     if "dim" not in data:
-        if hf_repo == "nvidia/personaplex-7b-v1":
+        if hf_repo == "nvidia/personaplex-7b-v1" or hf_repo == "kyutai/personaplex-rl-seamless":
             return models.config_personaplex_7b_v1()
         return models.config_v0_1()
     return models.LmConfig.from_config_dict(data)
