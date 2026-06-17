@@ -338,6 +338,26 @@ class LmGen:
                 text_token=self.zero_text_code,
             )
 
+        # Force the lazily-built graph to evaluate now, while no audio is
+        # streaming. Otherwise the entire system-prompt forward pass stays
+        # deferred until the first real generation step forces it, blocking
+        # that step for seconds and producing a large startup audio backlog.
+        self.sync_state()
+
+    def sync_state(self) -> None:
+        """Evaluate the lazily-built model/cache state so subsequent steps
+        only pay for one step's worth of compute."""
+        arrays: list[mx.array] = [self.cache, self.provided]
+        for c in (*self.model.transformer_cache, *self.model.depformer_cache):
+            keys, values = c.self_attn.state
+            if keys is not None:
+                arrays.append(keys)
+            if values is not None:
+                arrays.append(values)
+            if c.cross_attn is not None:
+                arrays.extend(c.cross_attn)
+        mx.eval(arrays)
+
     def last_audio_tokens(self) -> Optional[mx.array]:
         gen_idx = self.step_idx - 1 - self.max_delay
         if gen_idx < 0:
